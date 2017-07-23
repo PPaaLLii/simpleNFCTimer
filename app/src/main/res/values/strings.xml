@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Simple NFC Timer</string>
+
+    <string name="title_activity_manage_nfctags">Manage NFC Tags</string>
+    <string name="title_activity_edit_tag">Edit Tag</string>
+    <string name="title_activity_nfc">NFCActivity</string>
+</resources>
