@@ -32,17 +32,17 @@ public class RingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        Intent nfcIntent = new Intent(this, getClass());
-        nfcIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        nfcPendingIntent = PendingIntent.getActivity(this, 0, nfcIntent, 0);
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        try {
-            intentFiltersArray = new IntentFilter[]{tagIntentFilter};
-        }
-        catch (Throwable t) {
-            t.printStackTrace();
-        }
+//        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//        Intent nfcIntent = new Intent(this, getClass());
+//        nfcIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        nfcPendingIntent = PendingIntent.getActivity(this, 0, nfcIntent, 0);
+//        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+//        try {
+//            intentFiltersArray = new IntentFilter[]{tagIntentFilter};
+//        }
+//        catch (Throwable t) {
+//            t.printStackTrace();
+//        }
 
         Intent intent = getIntent();
         tagNumber = -1;
@@ -82,30 +82,29 @@ public class RingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        nfcAdapter.enableForegroundDispatch(
-                this,
-                nfcPendingIntent,
-                intentFiltersArray,
-                null);
-        handleIntent(getIntent());
+//        nfcAdapter.enableForegroundDispatch(
+//                this,
+//                nfcPendingIntent,
+//                intentFiltersArray,
+//                null);
+//        handleIntent(getIntent());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        nfcAdapter.disableForegroundDispatch(this);
     }
 
-    private void handleIntent(Intent intent){
-        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if (tag.getId() == null)
-            Toast.makeText(this, "Id je null!", Toast.LENGTH_LONG).show();
-
-        String tag_id = Base64.encodeToString(tag.getId(), Base64.NO_WRAP);
-
-        int tagNumber = sp.getInt(tag_id, -1);
-        if (this.tagNumber == tagNumber) {
-            defaultRingtone.stop();
-        }
-    }
+//    private void handleIntent(Intent intent){
+//        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+//        if (tag.getId() == null)
+//            Toast.makeText(this, "Id je null!", Toast.LENGTH_LONG).show();
+//
+//        String tag_id = Base64.encodeToString(tag.getId(), Base64.NO_WRAP);
+//
+//        int tagNumber = sp.getInt(tag_id, -1);
+//        if (this.tagNumber == tagNumber) {
+//            defaultRingtone.stop();
+//        }
+//    }
 }

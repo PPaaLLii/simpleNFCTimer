@@ -43,7 +43,6 @@ public class NFCActivity extends AppCompatActivity {
                 String tag_id = Base64.encodeToString(tag.getId(), Base64.NO_WRAP);
 
                 int tagNumber = sp.getInt(tag_id, -1);
-
                 if (tagNumber == -1) {
                     // brand new tag
                     tagNumber = registerTag(tag_id);
@@ -60,7 +59,6 @@ public class NFCActivity extends AppCompatActivity {
                         // removed tag
                         configureTag(tagNumber);
                     }
-
                 }
             }
         }
