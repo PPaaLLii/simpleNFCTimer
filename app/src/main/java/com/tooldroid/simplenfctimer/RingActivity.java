@@ -1,5 +1,6 @@
 package com.tooldroid.simplenfctimer;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -32,17 +33,8 @@ public class RingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
 
-//        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-//        Intent nfcIntent = new Intent(this, getClass());
-//        nfcIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        nfcPendingIntent = PendingIntent.getActivity(this, 0, nfcIntent, 0);
-//        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-//        try {
-//            intentFiltersArray = new IntentFilter[]{tagIntentFilter};
-//        }
-//        catch (Throwable t) {
-//            t.printStackTrace();
-//        }
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(0);
 
         Intent intent = getIntent();
         tagNumber = -1;
@@ -63,7 +55,7 @@ public class RingActivity extends AppCompatActivity {
 
         if (tagType == 0) {
             Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(1000 * 5);
+            v.vibrate(1000 * 3);
         }
 
         if (tagType == 1) {

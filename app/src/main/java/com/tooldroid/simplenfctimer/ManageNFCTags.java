@@ -33,14 +33,6 @@ public class ManageNFCTags extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_manage_nfctags);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Please scan your tag!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         sp = PreferenceManager.getDefaultSharedPreferences(this);
         List<String> tagList = new ArrayList();
