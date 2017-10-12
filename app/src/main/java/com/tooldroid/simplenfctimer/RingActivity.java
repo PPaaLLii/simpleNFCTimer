@@ -17,86 +17,95 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.util.logging.Logger;
 
 public class RingActivity extends AppCompatActivity {
 
     private SharedPreferences sp;
     private Ringtone defaultRingtone;
-    private PendingIntent nfcPendingIntent;
-    private IntentFilter[] intentFiltersArray;
-    private NfcAdapter nfcAdapter;
     private int tagNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
+        Log.e(RingActivity.class.toString(), "onCreate");
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(0);
+        cancelNotification();
 
         Intent intent = getIntent();
         tagNumber = -1;
         if (intent != null) {
             Bundle extras = intent.getExtras();
-             tagNumber = extras.getInt("tagNumber", -1);
+            tagNumber = extras.getInt("tagNumber", -1);
             if (tagNumber == -1) {
                 Toast.makeText(this, "Invalid Tag Number!", Toast.LENGTH_SHORT).show();
+                Log.e(RingActivity.class.toString(), "invalid tag number");
             }
-        }
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+            sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-        int tagType = sp.getInt("" + tagNumber + "type", -1);
-        if (tagType == -1) {
-            Toast.makeText(this, "Invalid Tag Type!", Toast.LENGTH_SHORT).show();
-        }
-
-        if (tagType == 0) {
-            Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(1000 * 3);
-        }
-
-        if (tagType == 1) {
-            defaultRingtone = RingtoneManager.getRingtone(this, Settings.System.DEFAULT_RINGTONE_URI);
-            SharedPreferences.Editor ringingEditor = sp.edit();
-            ringingEditor.putBoolean("isRinging", true);
-            ringingEditor.apply();
-            try {
-                defaultRingtone.play();
-            } catch (Exception e) {
-                Toast.makeText(this, "Cannot play ringtone!", Toast.LENGTH_SHORT);
+            // get tag type - vibrate or ring
+            int tagType = sp.getInt("" + tagNumber + "type", -1);
+            if (tagType == -1) {
+                Toast.makeText(this, "Invalid Tag Type!", Toast.LENGTH_SHORT).show();
             }
+
+            if (tagType == 0) {
+                vibrate();
+            }
+
+            if (tagType == 1) {
+                ring();
+            }
+        } else {
+            Toast.makeText(this, "Unknown error", Toast.LENGTH_SHORT).show();
+            Log.e(RingActivity.class.toString(), "intent is null!");
         }
+    }
+
+    private void cancelNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(0);
+        Log.e(RingActivity.class.toString(), "notification cancelled");
+    }
+
+    private void ring() {
+        defaultRingtone = RingtoneManager.getRingtone(this, Settings.System.DEFAULT_RINGTONE_URI);
+        SharedPreferences.Editor ringingEditor = sp.edit();
+        ringingEditor.putBoolean("isRinging", true);
+        ringingEditor.apply();
+        try {
+            defaultRingtone.play();
+        } catch (Exception e) {
+            Toast.makeText(this, "Cannot play ringtone!", Toast.LENGTH_SHORT);
+        }
+    }
+
+    private void vibrate() {
+        Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(1000 * 4);
+        Log.e(RingActivity.class.toString(), "vibrating");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        nfcAdapter.enableForegroundDispatch(
-//                this,
-//                nfcPendingIntent,
-//                intentFiltersArray,
-//                null);
-//        handleIntent(getIntent());
+        Log.e(RingActivity.class.toString(), "onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.e(RingActivity.class.toString(), "onPause");
     }
 
-//    private void handleIntent(Intent intent){
-//        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-//        if (tag.getId() == null)
-//            Toast.makeText(this, "Id je null!", Toast.LENGTH_LONG).show();
-//
-//        String tag_id = Base64.encodeToString(tag.getId(), Base64.NO_WRAP);
-//
-//        int tagNumber = sp.getInt(tag_id, -1);
-//        if (this.tagNumber == tagNumber) {
-//            defaultRingtone.stop();
-//        }
-//    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(RingActivity.class.toString(), "onRestart");
+    }
 }

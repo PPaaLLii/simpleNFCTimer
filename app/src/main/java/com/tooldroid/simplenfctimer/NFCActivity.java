@@ -12,7 +12,10 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 public class NFCActivity extends AppCompatActivity {
 
@@ -42,6 +45,7 @@ public class NFCActivity extends AppCompatActivity {
 
                 handleNfcIntent(intent);
             } else {
+                // notification click
                 AlarmSchedule.unSchedule(this);
                 removeNotification();
             }
@@ -65,7 +69,6 @@ public class NFCActivity extends AppCompatActivity {
                 int hour = sp.getInt("" + tagNumber + "hour", -1);
                 int minute = sp.getInt("" + tagNumber + "minute", -1);
                 AlarmSchedule.schedule(this, hour, minute, tagNumber);
-                // TODO: 11/10/2017 start notification
                 startNotification(hour, minute);
                 this.finish();
             } else {
@@ -77,10 +80,14 @@ public class NFCActivity extends AppCompatActivity {
 
     private void startNotification(int hour, int minute) {
         Intent intent = new Intent(this, NFCActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, hour);
+        cal.add(Calendar.MINUTE, minute);
 
         Notification n  = new Notification.Builder(this)
-                .setContentTitle("Scheduled alarm for " + hour + " h and " + minute + " m")
+                .setContentTitle("Alarm will end at " + cal.get(Calendar.HOUR_OF_DAY) + " : " + cal.get(Calendar.MINUTE))
                 .setContentText("Tap to dismiss alarm")
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
                 .setContentIntent(pendingIntent)
@@ -95,12 +102,13 @@ public class NFCActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(0);
         Toast.makeText(this, "Alarm was dismissed", Toast.LENGTH_SHORT).show();
+        Log.e(NFCActivity.class.toString(), "notification canceled");
     }
 
     private String getTagId(Intent intent) {
         Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag.getId() == null)
-            Toast.makeText(this, "Id je null!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Id is null!", Toast.LENGTH_LONG).show();
 
         return Base64.encodeToString(tag.getId(), Base64.NO_WRAP);
     }
@@ -129,4 +137,21 @@ public class NFCActivity extends AppCompatActivity {
         return "" + tagNumber + "valid";
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(NFCActivity.class.toString(), "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(NFCActivity.class.toString(), "onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(NFCActivity.class.toString(), "onRestart");
+    }
 }
