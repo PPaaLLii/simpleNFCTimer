@@ -18,9 +18,9 @@ public class AlarmSchedule {
     public static void schedule(Context context, int hour, int minute, int tagNumber) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        Intent intent = new Intent(context, RingActivity.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
         intent.putExtra("tagNumber", tagNumber);
-        pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 1000*60*minute + 1000*60*60*hour, pendingIntent);
         Toast.makeText(context, "Setting alarm for " + hour + " hours and " + minute + " minutes!" , Toast.LENGTH_SHORT).show();
         Log.e(AlarmSchedule.class.toString(), "alarm scheduled");

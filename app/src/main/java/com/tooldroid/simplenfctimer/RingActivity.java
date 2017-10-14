@@ -24,71 +24,11 @@ import java.util.logging.Logger;
 
 public class RingActivity extends AppCompatActivity {
 
-    private SharedPreferences sp;
-    private Ringtone defaultRingtone;
-    private int tagNumber;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ring);
         Log.e(RingActivity.class.toString(), "onCreate");
-
-        cancelNotification();
-
-        Intent intent = getIntent();
-        tagNumber = -1;
-        if (intent != null) {
-            Bundle extras = intent.getExtras();
-            tagNumber = extras.getInt("tagNumber", -1);
-            if (tagNumber == -1) {
-                Toast.makeText(this, "Invalid Tag Number!", Toast.LENGTH_SHORT).show();
-                Log.e(RingActivity.class.toString(), "invalid tag number");
-            }
-
-            sp = PreferenceManager.getDefaultSharedPreferences(this);
-
-            // get tag type - vibrate or ring
-            int tagType = sp.getInt("" + tagNumber + "type", -1);
-            if (tagType == -1) {
-                Toast.makeText(this, "Invalid Tag Type!", Toast.LENGTH_SHORT).show();
-            }
-
-            if (tagType == 0) {
-                vibrate();
-            }
-
-            if (tagType == 1) {
-                ring();
-            }
-        } else {
-            Toast.makeText(this, "Unknown error", Toast.LENGTH_SHORT).show();
-            Log.e(RingActivity.class.toString(), "intent is null!");
-        }
-    }
-
-    private void cancelNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(0);
-        Log.e(RingActivity.class.toString(), "notification cancelled");
-    }
-
-    private void ring() {
-        defaultRingtone = RingtoneManager.getRingtone(this, Settings.System.DEFAULT_RINGTONE_URI);
-        SharedPreferences.Editor ringingEditor = sp.edit();
-        ringingEditor.putBoolean("isRinging", true);
-        ringingEditor.apply();
-        try {
-            defaultRingtone.play();
-        } catch (Exception e) {
-            Toast.makeText(this, "Cannot play ringtone!", Toast.LENGTH_SHORT);
-        }
-    }
-
-    private void vibrate() {
-        Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(1000 * 4);
-        Log.e(RingActivity.class.toString(), "vibrating");
     }
 
     @Override

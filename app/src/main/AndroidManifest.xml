@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -26,10 +27,10 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".EditTagActivity"
             android:label="@string/title_activity_edit_tag"
@@ -39,9 +40,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tooldroid.simplenfctimer.ManageNFCTags" />
         </activity>
-
         <activity android:name=".RingActivity" />
-
         <activity
             android:name=".NFCActivity"
             android:label="@string/title_activity_nfc"
@@ -50,12 +49,19 @@
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <meta-data
                     android:name="android.nfc.action.TECH_DISCOVERED"
                     android:resource="@xml/nfc_supported_technologies" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
     </application>
 
 </manifest>
